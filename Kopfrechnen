@@ -1,0 +1,73 @@
+#include <Wire.h>  // Wire Bibliothek hochladen
+#include <LiquidCrystal_I2C.h> // Vorher hinzugefügte LiquidCrystal_I2C Bibliothek hochladen
+#include <IRremote.hpp>
+LiquidCrystal_I2C lcd1(0x27, 16, 2);  //Hier wird das erste Display benannt (Adresse/Zeichen pro Zeile/Anzahl Zeilen). In unserem Fall „lcd1“. Die Adresse des I²C Displays kann je nach Modul variieren.
+LiquidCrystal_I2C lcd2(0x26, 16, 2);  //Hier wird das zweite LCD benannt, hier "lcd2".
+LiquidCrystal_I2C lcd3(0x25, 16, 2);
+int RECV_PIN = 11;
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+
+void setup()
+{
+  lcd1.init(); //Im Setup wird das LCD1 gestartet
+  lcd2.init(); //Im Setup wird das LCD2 gestartet
+  lcd1.backlight(); //Hintergrundbeleuchtung von LCD1 einschalten (0 schaltet die Beleuchtung aus).
+  lcd2.backlight(); //Hintergrundbeleuchtung von LCD2 einschalten (0 schaltet die Beleuchtung aus).
+  Serial.begin(9600);
+  pinMode (13, OUTPUT);
+  irrecv.enableIRIn();
+}
+
+void loop()
+{
+  lcd1.setCursor(0,0); //Der folgende Text soll beim LCD1 beim ersten Zeichen in der ersten Zeile beginnen.
+  lcd1.print("Display1 Zeile 1"); //In der ersten Zeile soll der Text „Display1 Zeile 1“ angezeigt werden
+  lcd1.setCursor(0,1); //Der folgende Text soll beim LCD1 beim ersten Zeichen in der zweiten Zeile beginnen.
+  lcd1.print("Display1 Zeile 2"); //In der zweiten Zeile soll der Text „Display1 Zeile 2“ angezeigt werden
+  lcd2.setCursor(0,0); //Der folgende Text soll beim LCD2 beim ersten Zeichen in der ersten Zeile beginnen.
+  lcd2.print("Display2 Zeile 1"); //In der ersten Zeile soll der Text „Display2 Zeile 1“ angezeigt werden
+  lcd2.setCursor(0,1); //Der folgende Text soll beim LCD2 beim ersten Zeichen in der zweiten Zeile beginnen.
+  lcd2.print("Display2 Zeile 2"); //In der zweiten Zeile soll der Text „Display2 Zeile 2“ angezeigt werden
+  if (irrecv.decode()) {
+    // Serial.println(IrReceiver.decodedIRData.decodedRawData, DEC);
+    IrReceiver.printIRResultShort(&Serial);
+    IrReceiver.printIRSendUsage(&Serial);
+    irrecv.resume();
+  }
+}
+
+// // I2C Scanner
+// // Written by Nick Gammon
+// // Date: 20th April 2011
+// #include <Wire.h>
+// void setup() {
+//   Serial.begin (115200);
+//   // Leonardo: wait for serial port to connect
+//   while (!Serial)
+//   {
+//   }
+//   Serial.println ();
+//   Serial.println ("I2C scanner. Scanning ...");
+//   byte count = 0;
+//   Wire.begin();
+//   for (byte i = 8; i < 120; i++)
+//   {
+//     Wire.beginTransmission (i);
+//     if (Wire.endTransmission () == 0)
+//     {
+//       Serial.print ("Found address: ");
+//       Serial.print (i, DEC);
+//       Serial.print (" (0x");
+//       Serial.print (i, HEX);
+//       Serial.println (")");
+//       count++;
+//       delay (1); // maybe unneeded?
+//     } // end of good response
+//   } // end of for loop
+//   Serial.println ("Done.");
+//   Serial.print ("Found ");
+//   Serial.print (count, DEC);
+//   Serial.println (" device(s).");
+// } // end of setup
+// void loop() {}
