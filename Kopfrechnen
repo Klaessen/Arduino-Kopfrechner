@@ -4,9 +4,9 @@
 LiquidCrystal_I2C lcd1(0x27, 16, 2);  //Hier wird das erste Display benannt (Adresse/Zeichen pro Zeile/Anzahl Zeilen). In unserem Fall „lcd1“. Die Adresse des I²C Displays kann je nach Modul variieren.
 LiquidCrystal_I2C lcd2(0x26, 16, 2);  //Hier wird das zweite LCD benannt, hier "lcd2".
 LiquidCrystal_I2C lcd3(0x25, 16, 2);
-int RECV_PIN = 11;
-IRrecv irrecv(RECV_PIN);
-decode_results results;
+int IR_RECEIVE_PIN = 11;
+//IRrecv irrecv(RECV_PIN);
+//decode_results results;
 
 void setup()
 {
@@ -16,7 +16,8 @@ void setup()
   lcd2.backlight(); //Hintergrundbeleuchtung von LCD2 einschalten (0 schaltet die Beleuchtung aus).
   Serial.begin(9600);
   pinMode (13, OUTPUT);
-  irrecv.enableIRIn();
+  //rrecv.enableIRIn();
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 }
 
 void loop()
@@ -29,11 +30,11 @@ void loop()
   lcd2.print("Display2 Zeile 1"); //In der ersten Zeile soll der Text „Display2 Zeile 1“ angezeigt werden
   lcd2.setCursor(0,1); //Der folgende Text soll beim LCD2 beim ersten Zeichen in der zweiten Zeile beginnen.
   lcd2.print("Display2 Zeile 2"); //In der zweiten Zeile soll der Text „Display2 Zeile 2“ angezeigt werden
-  if (irrecv.decode()) {
-    // Serial.println(IrReceiver.decodedIRData.decodedRawData, DEC);
+  if (IrReceiver.decode()) {
+    Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
     IrReceiver.printIRResultShort(&Serial);
     IrReceiver.printIRSendUsage(&Serial);
-    irrecv.resume();
+    IrReceiver.resume();
   }
 }
 
