@@ -1,12 +1,24 @@
 #include <Wire.h>  // Wire Bibliothek hochladen
 #include <LiquidCrystal_I2C.h> // Vorher hinzugefügte LiquidCrystal_I2C Bibliothek hochladen
 #include <IRremote.hpp>
+
+#define IR_RECEIVE_PIN 11
+
+#define IR_BUTTON_0 22
+#define IR_BUTTON_1 12
+#define IR_BUTTON_2 24
+#define IR_BUTTON_3 94
+#define IR_BUTTON_4 8
+#define IR_BUTTON_5 28
+#define IR_BUTTON_6 90
+#define IR_BUTTON_7 66
+#define IR_BUTTON_8 82
+#define IR_BUTTON_9 74
+
 LiquidCrystal_I2C lcd1(0x27, 16, 2);  //Hier wird das erste Display benannt (Adresse/Zeichen pro Zeile/Anzahl Zeilen). In unserem Fall „lcd1“. Die Adresse des I²C Displays kann je nach Modul variieren.
 LiquidCrystal_I2C lcd2(0x26, 16, 2);  //Hier wird das zweite LCD benannt, hier "lcd2".
 LiquidCrystal_I2C lcd3(0x25, 16, 2);
-int IR_RECEIVE_PIN = 11;
-//IRrecv irrecv(RECV_PIN);
-//decode_results results;
+
 
 void setup()
 {
@@ -16,25 +28,107 @@ void setup()
   lcd2.backlight(); //Hintergrundbeleuchtung von LCD2 einschalten (0 schaltet die Beleuchtung aus).
   Serial.begin(9600);
   pinMode (13, OUTPUT);
-  //rrecv.enableIRIn();
   IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 }
 
 void loop()
 {
-  lcd1.setCursor(0,0); //Der folgende Text soll beim LCD1 beim ersten Zeichen in der ersten Zeile beginnen.
-  lcd1.print("Display1 Zeile 1"); //In der ersten Zeile soll der Text „Display1 Zeile 1“ angezeigt werden
-  lcd1.setCursor(0,1); //Der folgende Text soll beim LCD1 beim ersten Zeichen in der zweiten Zeile beginnen.
-  lcd1.print("Display1 Zeile 2"); //In der zweiten Zeile soll der Text „Display1 Zeile 2“ angezeigt werden
+  //Der folgende Text soll beim LCD1 beim ersten Zeichen in der ersten Zeile beginnen.
+  //lcd1.print("Display1 Zeile 1"); //In der ersten Zeile soll der Text „Display1 Zeile 1“ angezeigt werden
+  //lcd1.setCursor(0,1); //Der folgende Text soll beim LCD1 beim ersten Zeichen in der zweiten Zeile beginnen.
+  //lcd1.print("Display1 Zeile 2"); //In der zweiten Zeile soll der Text „Display1 Zeile 2“ angezeigt werden
   lcd2.setCursor(0,0); //Der folgende Text soll beim LCD2 beim ersten Zeichen in der ersten Zeile beginnen.
   lcd2.print("Display2 Zeile 1"); //In der ersten Zeile soll der Text „Display2 Zeile 1“ angezeigt werden
   lcd2.setCursor(0,1); //Der folgende Text soll beim LCD2 beim ersten Zeichen in der zweiten Zeile beginnen.
   lcd2.print("Display2 Zeile 2"); //In der zweiten Zeile soll der Text „Display2 Zeile 2“ angezeigt werden
-  if (IrReceiver.decode()) {
-    Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
-    IrReceiver.printIRResultShort(&Serial);
-    IrReceiver.printIRSendUsage(&Serial);
+  delay(300);
+  if (IrReceiver.decode()) 
+  {
     IrReceiver.resume();
+    lcd1.clear();  
+    //Serial.println(IrReceiver.decodedIRData.command);
+  	int command = IrReceiver.decodedIRData.command;
+    switch (command) 
+    {
+      case IR_BUTTON_0: 
+      {
+        //Serial.println("Pressed on button 0");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 0");
+        break;
+      }
+      case IR_BUTTON_1: 
+      {
+        //Serial.println("Pressed on button 1");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 1");
+        break;
+      }
+      case IR_BUTTON_2:
+      {
+        //Serial.println("Pressed on button 2");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 2");
+        break;
+      }
+      case IR_BUTTON_3: 
+      {
+        //Serial.println("Pressed on button 3");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 3");        
+        break;
+      }
+      case IR_BUTTON_4: 
+      {
+        //Serial.println("Pressed on button 4");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 4");
+        break;
+      }
+      case IR_BUTTON_5: 
+      {
+        //Serial.println("Pressed on button 5");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 5");
+        break;
+      }      
+      case IR_BUTTON_6: 
+      {
+        //Serial.println("Pressed on button 6");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 6");
+        break;
+      }
+      case IR_BUTTON_7: 
+      {
+        //Serial.println("Pressed on button 7");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 7");
+        break;
+      }
+      case IR_BUTTON_8: 
+      {
+        //Serial.println("Pressed on button 8");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 8");
+        break;
+      }
+      case IR_BUTTON_9: 
+      {
+        //Serial.println("Pressed on button 9");
+        lcd1.setCursor(0,0);
+        lcd1.print("Button 9");
+        break;
+      }
+      default: 
+      {
+        //Serial.println("Button not recognized");        
+        lcd1.setCursor(0,0);
+        lcd1.print("-"); 
+        lcd1.setCursor(0,1);
+        lcd1.print("Button not recognized");
+      }    
+    }      
   }
 }
 
